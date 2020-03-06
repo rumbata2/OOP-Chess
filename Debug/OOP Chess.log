@@ -1,4 +1,4 @@
-﻿  OOP Chess.cpp
-c:\users\user\source\repos\oop chess\board.h(14): warning C4018: '<': signed/unsigned mismatch
-c:\users\user\source\repos\oop chess\board.h(15): warning C4018: '<': signed/unsigned mismatch
+﻿  Board.cpp
+c:\users\user\source\repos\oop chess\board.cpp(26): warning C4018: '<': signed/unsigned mismatch
+c:\users\user\source\repos\oop chess\board.cpp(27): warning C4018: '<': signed/unsigned mismatch
   OOP Chess.vcxproj -> C:\Users\User\source\repos\OOP Chess\Debug\OOP Chess.exe

@@ -28,5 +28,8 @@ public:
 	int getYCoordinate() {
 		return yCoordinate;
 	}
+	void setPiece(Piece piece) {
+		this->piece = piece;
+	}
 };
 
