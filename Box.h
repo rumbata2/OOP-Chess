@@ -6,7 +6,7 @@ private:
 	char xCoordinate;
 	int yCoordinate;
 	//bool isWhite;
-	Piece piece;
+	Piece* piece;
 
 public:
 	Box(char xCoordinate, int yCoordinate) {
@@ -15,7 +15,7 @@ public:
 		//this->isWhite = (xCoordinate + yCoordinate) % 2;
 	}
 
-	Box(int xCoordinate, int yCoordinate, Piece piece) {
+	Box(int xCoordinate, int yCoordinate, Piece* piece) {
 		this->xCoordinate = xCoordinate;
 		this->yCoordinate = yCoordinate;
 		//this->isWhite = (xCoordinate + yCoordinate) % 2;
@@ -28,7 +28,7 @@ public:
 	int getYCoordinate() {
 		return yCoordinate;
 	}
-	void setPiece(Piece piece) {
+	void setPiece(Piece* piece) {
 		this->piece = piece;
 	}
 };

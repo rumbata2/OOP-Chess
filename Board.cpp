@@ -20,8 +20,9 @@ Board::Board() {
 }
 
 void Board::beginningPosition() {
-	//Pawn p('a', 1, 1);
-	//boxes[0][0].setPiece(p);
+	for (int i = 0; i < 8; i++) {
+
+	}
 }
 
 void Board::getBoxesInfo() {

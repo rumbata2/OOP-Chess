@@ -8,6 +8,9 @@ class Board
 private:
 	vector<vector<Box>> boxes;
 
+	
+
+
 public:
 	Board();
 	void beginningPosition();
