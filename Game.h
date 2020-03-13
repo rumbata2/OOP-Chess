@@ -19,5 +19,8 @@ public:
 
 
 	void DrawBeginningPosition();
+	void drawSquares();
+	void drawPiece(char x, int y, olc::Sprite* spr);
+	void drawBoard(Board* board);
 };
 

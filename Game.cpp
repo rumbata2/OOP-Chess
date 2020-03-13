@@ -4,8 +4,6 @@
 
 
 bool Game::OnUserCreate() {
-	olc::Pixel brown(89, 60, 31);
-	int32_t posX = 0, posY = 0;
 	sprites[0] = new olc::Sprite("Sprites/WhitePawn.png");
 	sprites[1] = new olc::Sprite("Sprites/WhiteRook.png");
 	sprites[2] = new olc::Sprite("Sprites/WhiteKnight.png");
@@ -18,23 +16,13 @@ bool Game::OnUserCreate() {
 	sprites[9] = new olc::Sprite("Sprites/BlackBishop.png");
 	sprites[10] = new olc::Sprite("Sprites/BlackQueen.png");
 	sprites[11] = new olc::Sprite("Sprites/BlackKing.png");
+	
+	drawSquares();
+	Board* b = new Board();
 
-
-	for (int i = 1; i <= 8; i++) {
-		for (int j = 1; j <= 8; j++) {
-			if ((i + j) % 2 == 0) {
-				FillRect(posX, posY, PIECE_SIZE - 1, PIECE_SIZE - 1);
-			}
-			else {
-				FillRect(posX, posY, PIECE_SIZE - 1, PIECE_SIZE - 1, brown);
-			}
-			posX += PIECE_SIZE;
-		}
-		posX = 0;
-		posY += PIECE_SIZE;
-	}
-
-	DrawBeginningPosition();
+	//DrawBeginningPosition();
+	b->initializeBoard();
+	drawBoard(b);
 	return true;
 };
 
@@ -49,6 +37,24 @@ bool Game::OnUserUpdate(float elapsedTime) {
 	}
 	
 	return true;
+}
+
+void Game::drawSquares() {
+	olc::Pixel brown(89, 60, 31);
+	int32_t posX = 0, posY = 0;
+	for (int i = 1; i <= 8; i++) {
+		for (int j = 1; j <= 8; j++) {
+			if ((i + j) % 2 == 0) {
+				FillRect(posX, posY, PIECE_SIZE - 1, PIECE_SIZE - 1);
+			}
+			else {
+				FillRect(posX, posY, PIECE_SIZE - 1, PIECE_SIZE - 1, brown);
+			}
+			posX += PIECE_SIZE;
+		}
+		posX = 0;
+		posY += PIECE_SIZE;
+	}
 }
 
 
@@ -69,3 +75,23 @@ void Game::DrawBeginningPosition() {
 	DrawSprite(560, 560, sprites[1]); DrawSprite(560, 0, sprites[7]);
 	SetPixelMode(olc::Pixel::NORMAL);
 };
+
+void Game::drawPiece(char x, int y, olc::Sprite* spr) {
+	DrawSprite(convertToMatrixCoordinates(x, y).second * 80, convertToMatrixCoordinates(x, y).first * 80, spr);
+}
+
+void Game::drawBoard(Board* board) {
+	SetPixelMode(olc::Pixel::ALPHA);
+
+	for (int y = 1; y <= 8; y++) {
+		for (char x = 'a'; x <= 'h'; x++) {
+			if (board->getPiece(x, y)) {
+				//cout << convertToMatrixCoordinates(x, y).first << " " << convertToMatrixCoordinates(x, y).second << "\n";
+				//DrawSprite(convertToMatrixCoordinates(x, y).first * 80, convertToMatrixCoordinates(x, y).second * 80, sprites[0]);
+				drawPiece(x, y, sprites[0]);
+			}
+		}
+	}
+
+	SetPixelMode(olc::Pixel::NORMAL);
+}
