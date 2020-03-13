@@ -20,7 +20,7 @@ bool Game::OnUserCreate() {
 	drawSquares();
 	Board* b = new Board();
 
-	//DrawBeginningPosition();
+
 	b->initializeBoard();
 	drawBoard(b);
 	return true;
@@ -57,24 +57,36 @@ void Game::drawSquares() {
 	}
 }
 
-
-
-
-void Game::DrawBeginningPosition() {
-	SetPixelMode(olc::Pixel::ALPHA);
-	for (int i = 0; i <= 560; i += 80) {
-		DrawSprite(i, 480, sprites[0]); //white pawns
-		DrawSprite(i, 80, sprites[6]); //black pawns
+olc::Sprite* Game::getPieceSprite(Piece* piece) {
+	if (piece->getIsWhite()) {
+		if (piece->name() == "Pawn")
+			return sprites[0];
+		else if (piece->name() == "Rook")
+			return sprites[1];
+		else if (piece->name() == "Knight")
+			return sprites[2];
+		else if (piece->name() == "Bishop")
+			return sprites[3];
+		else if (piece->name() == "Queen")
+			return sprites[4];
+		else if (piece->name() == "King")
+			return sprites[5];
 	}
-	for (int i = 1, x = 0; i <= 5; i++, x += 80) {
-		DrawSprite(x, 560, sprites[i]); //white
-		DrawSprite(x, 0, sprites[i + 6]); //black
+	else {
+		if (piece->name() == "Pawn")
+			return sprites[6];
+		else if (piece->name() == "Rook")
+			return sprites[7];
+		else if (piece->name() == "Knight")
+			return sprites[8];
+		else if (piece->name() == "Bishop")
+			return sprites[9];
+		else if (piece->name() == "Queen")
+			return sprites[10];
+		else //if (piece->name() == "King")
+			return sprites[11];
 	}
-	DrawSprite(400, 560, sprites[3]); DrawSprite(400, 0, sprites[9]);
-	DrawSprite(480, 560, sprites[2]); DrawSprite(480, 0, sprites[8]);
-	DrawSprite(560, 560, sprites[1]); DrawSprite(560, 0, sprites[7]);
-	SetPixelMode(olc::Pixel::NORMAL);
-};
+}
 
 void Game::drawPiece(char x, int y, olc::Sprite* spr) {
 	DrawSprite(convertToMatrixCoordinates(x, y).second * 80, convertToMatrixCoordinates(x, y).first * 80, spr);
@@ -85,10 +97,8 @@ void Game::drawBoard(Board* board) {
 
 	for (int y = 1; y <= 8; y++) {
 		for (char x = 'a'; x <= 'h'; x++) {
-			if (board->getPiece(x, y)) {
-				//cout << convertToMatrixCoordinates(x, y).first << " " << convertToMatrixCoordinates(x, y).second << "\n";
-				//DrawSprite(convertToMatrixCoordinates(x, y).first * 80, convertToMatrixCoordinates(x, y).second * 80, sprites[0]);
-				drawPiece(x, y, sprites[0]);
+			if (board->getPiece(x, y)) { 
+				drawPiece(x, y, getPieceSprite(board->getPiece(x, y)));
 			}
 		}
 	}

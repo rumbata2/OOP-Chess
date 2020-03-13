@@ -2,6 +2,7 @@
 #include "olcPixelGameEngine.h"
 #include "Board.h"
 #include <iostream>
+#include <typeinfo>
 
 
 
@@ -18,7 +19,8 @@ public:
 	bool OnUserUpdate(float elapsedtime);
 
 
-	void DrawBeginningPosition();
+	//void DrawBeginningPosition();
+	olc::Sprite* getPieceSprite(Piece* piece);
 	void drawSquares();
 	void drawPiece(char x, int y, olc::Sprite* spr);
 	void drawBoard(Board* board);

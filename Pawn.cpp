@@ -14,3 +14,7 @@ bool Pawn::canMove(char currX, int currY, char targetX, int targetY) {
 	}
 	else return false;
 }
+
+string Pawn::name() {
+	return "Pawn";
+}

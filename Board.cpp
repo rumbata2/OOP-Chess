@@ -21,6 +21,11 @@ Board::Board() {
 Board::~Board() {
 	for (int i = 0; i < 8; i++) {
 		delete whitePawns[i];
+		delete blackPawns[i];
+	}
+	for (int i = 0; i < 2; i++) {
+		delete whiteRooks[i];
+		delete blackRooks[i];
 	}
 }
 
@@ -29,7 +34,18 @@ void Board::initializeBoard() {
 	for (int i = 0; i < 8; i++) {
 		whitePawns[i] = new Pawn('a' + i, 2, 1);
 		boxes[6][i].setPiece(whitePawns[i]);
+		blackPawns[i] = new Pawn('a' + i, 7, 0);
+		boxes[1][i].setPiece(blackPawns[i]);
 	}
+	whiteRooks[0] = new Rook('a', 1, 1);
+	whiteRooks[1] = new Rook('h', 1, 1);
+	boxes[7][0].setPiece(whiteRooks[0]);
+	boxes[7][7].setPiece(whiteRooks[1]);
+
+	blackRooks[0] = new Rook('a', 8, 0);
+	blackRooks[1] = new Rook('h', 8, 0);
+	boxes[0][0].setPiece(blackRooks[0]);
+	boxes[0][7].setPiece(blackRooks[1]);
 }
 
 
