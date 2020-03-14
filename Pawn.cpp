@@ -7,7 +7,7 @@ bool Pawn::canMove(char currX, int currY, char targetX, int targetY) {
 	if (this->validCoordinates(targetX, targetY)) {
 		if (this->isWhite && targetY == currY + 1)
 			return true;
-		else if (this->isWhite && targetY == currY - 1)
+		else if (!this->isWhite && targetY == currY - 1)
 			return true;
 
 		return false;

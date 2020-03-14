@@ -1,4 +1,3 @@
-﻿  Board.cpp
-c:\users\user\source\repos\oop chess\board.cpp(54): warning C4018: '<': signed/unsigned mismatch
-c:\users\user\source\repos\oop chess\board.cpp(55): warning C4018: '<': signed/unsigned mismatch
+﻿  Game.cpp
+c:\users\user\source\repos\oop chess\game.cpp(89): warning C4715: 'Game::getPieceSprite': not all control paths return a value
   OOP Chess.vcxproj -> C:\Users\User\source\repos\OOP Chess\Debug\OOP Chess.exe

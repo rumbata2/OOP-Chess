@@ -2,6 +2,9 @@
 #include "Box.h"
 #include "Pawn.h"
 #include "Rook.h"
+#include "Knight.h"
+#include "Bishop.h"
+#include "King.h"
 #include <vector>
 #include <iostream>
 using namespace std;
@@ -16,7 +19,12 @@ private:
 	Pawn* blackPawns[8];
 	Rook* whiteRooks[2];
 	Rook* blackRooks[2];
-	
+	Knight* whiteKnights[2];
+	Knight* blackKnights[2];
+	Bishop* whiteBishops[2];
+	Bishop* blackBishops[2];
+	King* whiteKing;
+	King* blackKing;
 
 
 public:
