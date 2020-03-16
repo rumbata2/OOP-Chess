@@ -33,6 +33,7 @@ public:
 	void initializeBoard();
 	void getBoxesInfo();
 	Piece* getPiece(char x, int y);
+	void setPiece(char x, int y, Piece* piece);
 };
 
 pair<char, int> convertToChessCoordinates(int i, int j);

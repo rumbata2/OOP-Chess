@@ -16,9 +16,8 @@ bool Game::OnUserCreate() {
 	sprites[9] = new olc::Sprite("Sprites/BlackBishop.png");
 	sprites[10] = new olc::Sprite("Sprites/BlackQueen.png");
 	sprites[11] = new olc::Sprite("Sprites/BlackKing.png");
-	
-	drawSquares();
-	Board* b = new Board();
+
+	b = new Board();
 
 
 	b->initializeBoard();
@@ -28,11 +27,54 @@ bool Game::OnUserCreate() {
 
 bool Game::OnUserUpdate(float elapsedTime) {
 	if (GetMouse(0).bPressed) {
-		if (0 <= GetMouseX() && GetMouseY() < ScreenWidth() &&
-			0 <= GetMouseY() && GetMouseY() < ScreenHeight()) {
-			int32_t xBegin = GetMouseX() - (GetMouseX() % 80);
-			int32_t yBegin = GetMouseY() - (GetMouseY() % 80);
-			DrawRect(xBegin, yBegin, PIECE_SIZE - 1, PIECE_SIZE - 1, olc::GREEN);
+		char pressedX = convertToChessCoordinates(GetMouseY() / PIECE_SIZE, GetMouseX() / PIECE_SIZE).first;
+		int pressedY = convertToChessCoordinates(GetMouseY() / PIECE_SIZE, GetMouseX() / PIECE_SIZE).second;
+		int32_t xTileCoord = GetMouseX() - (GetMouseX() % PIECE_SIZE);
+		int32_t yTileCoord = GetMouseY() - (GetMouseY() % PIECE_SIZE);
+		if (!ctr) { //selecting a piece
+			if (b->getPiece(pressedX, pressedY)) {
+				if (b->getPiece(pressedX, pressedY)->getIsWhite() == whitesTurn) {
+					drawBoard(b);
+					DrawRect(xTileCoord, yTileCoord, PIECE_SIZE - 1, PIECE_SIZE - 1, olc::GREEN);
+					ctr = 1;
+					selectedPiece = b->getPiece(pressedX, pressedY);
+
+					lastPressedX = pressedX;
+					lastPressedY = pressedY;
+				}
+				
+			}
+		}
+		
+		else {
+			if (b->getPiece(pressedX, pressedY)) {
+				if (selectedPiece->getIsWhite() && !b->getPiece(pressedX, pressedY)->getIsWhite()  || //white takes black
+					!selectedPiece->getIsWhite() && b->getPiece(pressedX, pressedY)->getIsWhite()) {  //black takes white
+					b->setPiece(lastPressedX, lastPressedY, nullptr);
+					b->setPiece(pressedX, pressedY, selectedPiece);
+					drawBoard(b);
+					ctr = 0;
+					whitesTurn = !whitesTurn;
+				}
+				else { //selecting a different piece of the same color
+					selectedPiece = b->getPiece(pressedX, pressedY);
+					drawBoard(b);
+					DrawRect(xTileCoord, yTileCoord, PIECE_SIZE - 1, PIECE_SIZE - 1, olc::GREEN);
+					ctr = 1;
+
+					lastPressedX = pressedX;
+					lastPressedY = pressedY;
+				}		
+			}
+			else { // moving
+				if (selectedPiece->canMove(lastPressedX, lastPressedY, pressedX, pressedY)) {
+					b->setPiece(lastPressedX, lastPressedY, nullptr);
+					b->setPiece(pressedX, pressedY, selectedPiece);
+					drawBoard(b);
+					ctr = 0;
+					whitesTurn = !whitesTurn;
+				}
+			}	
 		}
 	}
 	
@@ -45,10 +87,10 @@ void Game::drawSquares() {
 	for (int i = 1; i <= 8; i++) {
 		for (int j = 1; j <= 8; j++) {
 			if ((i + j) % 2 == 0) {
-				FillRect(posX, posY, PIECE_SIZE - 1, PIECE_SIZE - 1);
+				FillRect(posX, posY, PIECE_SIZE, PIECE_SIZE);
 			}
 			else {
-				FillRect(posX, posY, PIECE_SIZE - 1, PIECE_SIZE - 1, brown);
+				FillRect(posX, posY, PIECE_SIZE, PIECE_SIZE, brown);
 			}
 			posX += PIECE_SIZE;
 		}
@@ -93,8 +135,11 @@ void Game::drawPiece(char x, int y, olc::Sprite* spr) {
 }
 
 void Game::drawBoard(Board* board) {
-	SetPixelMode(olc::Pixel::ALPHA);
 
+	drawSquares();
+
+	//draw piece sprites
+	SetPixelMode(olc::Pixel::ALPHA);
 	for (int y = 1; y <= 8; y++) {
 		for (char x = 'a'; x <= 'h'; x++) {
 			if (board->getPiece(x, y)) { 
@@ -102,6 +147,5 @@ void Game::drawBoard(Board* board) {
 			}
 		}
 	}
-
 	SetPixelMode(olc::Pixel::NORMAL);
 }

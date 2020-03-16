@@ -96,6 +96,10 @@ Piece* Board::getPiece(char x, int y) {
 	return boxes[convertToMatrixCoordinates(x, y).first][convertToMatrixCoordinates(x, y).second].getBoxPiece();
 }
 
+void Board::setPiece(char x, int y, Piece* piece) {
+	boxes[convertToMatrixCoordinates(x, y).first][convertToMatrixCoordinates(x, y).second].setPiece(piece);
+}
+
 pair<char, int> convertToChessCoordinates(int i, int j) {
 	pair<char, int> result;
 	result.first = 'a' + j;
