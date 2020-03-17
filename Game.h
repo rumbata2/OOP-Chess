@@ -12,7 +12,6 @@ class Game : public olc::PixelGameEngine {
 private:
 	olc::Sprite* sprites[12];
 	Board* b = nullptr;
-	int ctr = 0;
 	Piece* selectedPiece = nullptr;
 	char lastPressedX;
 	int lastPressedY;

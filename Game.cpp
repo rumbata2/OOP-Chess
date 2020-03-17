@@ -31,12 +31,11 @@ bool Game::OnUserUpdate(float elapsedTime) {
 		int pressedY = convertToChessCoordinates(GetMouseY() / PIECE_SIZE, GetMouseX() / PIECE_SIZE).second;
 		int32_t xTileCoord = GetMouseX() - (GetMouseX() % PIECE_SIZE);
 		int32_t yTileCoord = GetMouseY() - (GetMouseY() % PIECE_SIZE);
-		if (!ctr) { //selecting a piece
+		if (!selectedPiece) { //selecting a piece
 			if (b->getPiece(pressedX, pressedY)) {
 				if (b->getPiece(pressedX, pressedY)->getIsWhite() == whitesTurn) {
 					drawBoard(b);
 					DrawRect(xTileCoord, yTileCoord, PIECE_SIZE - 1, PIECE_SIZE - 1, olc::GREEN);
-					ctr = 1;
 					selectedPiece = b->getPiece(pressedX, pressedY);
 
 					lastPressedX = pressedX;
@@ -49,30 +48,31 @@ bool Game::OnUserUpdate(float elapsedTime) {
 		else {
 			if (b->getPiece(pressedX, pressedY)) {
 				if (selectedPiece->getIsWhite() && !b->getPiece(pressedX, pressedY)->getIsWhite()  || //white takes black
-					!selectedPiece->getIsWhite() && b->getPiece(pressedX, pressedY)->getIsWhite()) {  //black takes white
-					b->setPiece(lastPressedX, lastPressedY, nullptr);
-					b->setPiece(pressedX, pressedY, selectedPiece);
-					drawBoard(b);
-					ctr = 0;
-					whitesTurn = !whitesTurn;
+					!selectedPiece->getIsWhite() && b->getPiece(pressedX, pressedY)->getIsWhite()) {//black takes white
+					if (b->validMove(lastPressedX, lastPressedY, pressedX, pressedY)) {
+						b->setPiece(lastPressedX, lastPressedY, nullptr);
+						b->setPiece(pressedX, pressedY, selectedPiece);
+						drawBoard(b);
+						selectedPiece = nullptr;
+						whitesTurn = !whitesTurn;
+					}			
 				}
 				else { //selecting a different piece of the same color
 					selectedPiece = b->getPiece(pressedX, pressedY);
 					drawBoard(b);
 					DrawRect(xTileCoord, yTileCoord, PIECE_SIZE - 1, PIECE_SIZE - 1, olc::GREEN);
-					ctr = 1;
 
 					lastPressedX = pressedX;
 					lastPressedY = pressedY;
 				}		
 			}
 			else { // moving
-				if (selectedPiece->canMove(lastPressedX, lastPressedY, pressedX, pressedY)) {
+				if (b->validMove(lastPressedX, lastPressedY, pressedX, pressedY)) {
 					b->setPiece(lastPressedX, lastPressedY, nullptr);
 					b->setPiece(pressedX, pressedY, selectedPiece);
 					drawBoard(b);
-					ctr = 0;
 					whitesTurn = !whitesTurn;
+					selectedPiece = nullptr;
 				}
 			}	
 		}

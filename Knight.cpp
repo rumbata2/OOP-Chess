@@ -4,8 +4,8 @@
 
 Knight::Knight(char xCoordinate, int yCoordinate, bool isWhite) : Piece(xCoordinate, yCoordinate, isWhite) {}
 
-bool Knight::canMove(char currX, int currY, char targetX, int targetY) {
-	return true;
+bool Knight::movementPattern(char currX, int currY, char targetX, int targetY) {
+	return (abs(abs(currX - targetX) - abs(currY - targetY)) == 1 && abs(currX - targetX) + abs(currY - targetY) == 3);
 }
 
 string Knight::name() {

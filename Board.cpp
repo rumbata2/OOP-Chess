@@ -113,3 +113,104 @@ pair<int, int> convertToMatrixCoordinates(char x, int y) {
 	result.second = (int)(x - 'a');
 	return result;
 }
+
+bool Board::blockedPath(Piece* pieceToMove, char currX, int currY, char targetX, int targetY) {
+	bool result = 0;
+	if (pieceToMove->name() == "Bishop") {
+		int steps = abs(currX - targetX);
+		if (currX < targetX && currY < targetY) {
+			for (int i = 1; i < steps; i++) {
+				if (this->getPiece(currX + i, currY + i))
+					result = true;
+			}
+		}
+		else if (currX < targetX && currY > targetY) {
+			for (int i = 1; i < steps; i++) {
+				if (this->getPiece(currX + i, currY - i))
+					result = true;
+			}
+		}
+		else if (currX > targetX && currY < targetY) {
+			for (int i = 1; i < steps; i++) {
+				if (this->getPiece(currX - i, currY + i))
+					result = true;
+			}
+		}
+		else if (currX > targetX && currY > targetY) {
+			for (int i = 1; i < steps; i++) {
+				if (this->getPiece(currX - i, currY - i))
+					result = true;
+			}
+		}
+	}
+
+	if (pieceToMove->name() == "Rook") {
+		int steps;
+		if (currX == targetX) {
+			int steps = abs(currY - targetY);
+			if (currY < targetY) {
+				for (int i = 1; i < steps; i++) {
+					if (this->getPiece(currX, currY + i))
+						result = true;
+				}
+			}
+			else if (currY > targetY) {
+				for (int i = 1; i < steps; i++) {
+					if (this->getPiece(currX, currY - i))
+						result = true;
+				}
+			}
+		}
+		else if (currY == targetY) {
+			int steps = abs(currX - targetX);
+			if (currX < targetX) {
+				for (int i = 1; i < steps; i++) {
+					if (this->getPiece(currX + i, currY))
+						result = true;
+				}
+			}
+			else if (currX > targetX) {
+				for (int i = 1; i < steps; i++) {
+					if (this->getPiece(currX - i, currY))
+						result = true;
+				}
+			}
+		}
+	}
+
+	if (pieceToMove->name() == "Pawn") {
+		if (pieceToMove->getIsWhite() && getPiece(currX, currY + 1) ||
+			!pieceToMove->getIsWhite() && getPiece(currX, currY - 1))
+			result = true;
+	}
+
+	return result;
+}
+
+bool Board::pawnTakeRule(Piece* piece, char currX, int currY, char targetX, int targetY) {
+	if (piece->getIsWhite()) {
+		if (this->getPiece(currX - 1, currY + 1) && targetX == currX-1 && targetY == currY + 1 ||
+			this->getPiece(currX + 1, currY + 1) && targetX == currX + 1 && targetY == currY + 1) {
+			return true;
+		}
+	}
+	else {
+		if (this->getPiece(currX - 1, currY - 1) && targetX == currX - 1 && targetY == currY - 1 || 
+			this->getPiece(currX + 1, currY - 1) && targetX == currX + 1 && targetY == currY - 1) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Board::validMove(char currX, int currY, char targetX, int targetY) {
+	Piece* pieceToMove = this->getPiece(currX, currY);
+
+	if (pieceToMove->name() != "Pawn") {
+		return pieceToMove->movementPattern(currX, currY, targetX, targetY) && !blockedPath(pieceToMove, currX, currY, targetX, targetY);
+	}
+	else {
+		return ((pieceToMove->movementPattern(currX, currY, targetX, targetY) && !blockedPath(pieceToMove, currX, currY, targetX, targetY))
+				|| pawnTakeRule(pieceToMove, currX, currY, targetX, targetY));
+	}
+}

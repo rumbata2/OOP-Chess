@@ -34,6 +34,11 @@ public:
 	void getBoxesInfo();
 	Piece* getPiece(char x, int y);
 	void setPiece(char x, int y, Piece* piece);
+
+	bool pawnTakeRule(Piece* piece, char currX, int currY, char targetX, int targetY);
+	bool blockedPath(Piece* pieceToMove, char currX, int currY, char targetX, int targetY);
+	bool validMove(char currX, int currY, char targetX, int targetY);
+
 };
 
 pair<char, int> convertToChessCoordinates(int i, int j);
