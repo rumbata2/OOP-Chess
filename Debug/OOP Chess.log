@@ -1,2 +1,5 @@
-﻿  Knight.cpp
+﻿  Board.cpp
+c:\users\user\source\repos\oop chess\board.cpp(96): warning C4018: '<': signed/unsigned mismatch
+c:\users\user\source\repos\oop chess\board.cpp(97): warning C4018: '<': signed/unsigned mismatch
+c:\users\user\source\repos\oop chess\board.cpp(156): warning C4101: 'steps': unreferenced local variable
   OOP Chess.vcxproj -> C:\Users\User\source\repos\OOP Chess\Debug\OOP Chess.exe

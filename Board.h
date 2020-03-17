@@ -5,6 +5,7 @@
 #include "Knight.h"
 #include "Bishop.h"
 #include "King.h"
+#include "Queen.h"
 #include <vector>
 #include <iostream>
 using namespace std;
@@ -23,9 +24,10 @@ private:
 	Knight* blackKnights[2];
 	Bishop* whiteBishops[2];
 	Bishop* blackBishops[2];
+	Queen* whiteQueen;
+	Queen* blackQueen;
 	King* whiteKing;
 	King* blackKing;
-
 
 public:
 	Board();

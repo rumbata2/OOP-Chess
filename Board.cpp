@@ -32,7 +32,9 @@ Board::~Board() {
 		delete blackBishops[i];
 	}
 	delete whiteKing;
+	delete whiteQueen;
 	delete blackKing;
+	delete blackQueen;
 }
 
 
@@ -58,6 +60,9 @@ void Board::initializeBoard() {
 	boxes[7][2].setPiece(whiteBishops[0]);
 	boxes[7][5].setPiece(whiteBishops[1]);
 
+	whiteQueen = new Queen('d', 1, 1);
+	boxes[7][3].setPiece(whiteQueen);
+
 	whiteKing = new King('e', 1, 1);
 	boxes[7][4].setPiece(whiteKing);
 
@@ -77,6 +82,9 @@ void Board::initializeBoard() {
 	blackBishops[1] = new Bishop('f', 8, 0);
 	boxes[0][2].setPiece(blackBishops[0]);
 	boxes[0][5].setPiece(blackBishops[1]);
+
+	blackQueen = new Queen('d', 8, 0);
+	boxes[0][3].setPiece(blackQueen);
 
 	blackKing = new King('e', 8, 0);
 	boxes[0][4].setPiece(blackKing);
@@ -116,7 +124,7 @@ pair<int, int> convertToMatrixCoordinates(char x, int y) {
 
 bool Board::blockedPath(Piece* pieceToMove, char currX, int currY, char targetX, int targetY) {
 	bool result = 0;
-	if (pieceToMove->name() == "Bishop") {
+	if (pieceToMove->name() == "Bishop" || pieceToMove->name() == "Queen") {
 		int steps = abs(currX - targetX);
 		if (currX < targetX && currY < targetY) {
 			for (int i = 1; i < steps; i++) {
@@ -144,7 +152,7 @@ bool Board::blockedPath(Piece* pieceToMove, char currX, int currY, char targetX,
 		}
 	}
 
-	if (pieceToMove->name() == "Rook") {
+	if (pieceToMove->name() == "Rook" || pieceToMove->name() == "Queen") {
 		int steps;
 		if (currX == targetX) {
 			int steps = abs(currY - targetY);
