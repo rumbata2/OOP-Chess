@@ -1,5 +1,4 @@
 #pragma once
-#include "Box.h"
 #include "Pawn.h"
 #include "Rook.h"
 #include "Knight.h"
@@ -14,30 +13,19 @@ using namespace std;
 class Board
 {
 private:
-	vector<vector<Box>> boxes;
-
-	Pawn* whitePawns[8];
-	Pawn* blackPawns[8];
-	Rook* whiteRooks[2];
-	Rook* blackRooks[2];
-	Knight* whiteKnights[2];
-	Knight* blackKnights[2];
-	Bishop* whiteBishops[2];
-	Bishop* blackBishops[2];
-	Queen* whiteQueen;
-	Queen* blackQueen;
-	King* whiteKing;
-	King* blackKing;
+	vector<vector<Piece*>> squares;
 
 public:
 	Board();
-	~Board();
 	void initializeBoard();
-	void getBoxesInfo();
+
 	Piece* getPiece(char x, int y);
 	void setPiece(char x, int y, Piece* piece);
 
+	bool kingSideCastle(char currX, int currY, char targetX, int targetY);
+	bool queenSideCastle(char currX, int currY, char targetX, int targetY);
 	bool pawnTakeRule(Piece* piece, char currX, int currY, char targetX, int targetY);
+	bool enPassant(char currX, int currY, char targetX, int targetY);
 	bool blockedPath(Piece* pieceToMove, char currX, int currY, char targetX, int targetY);
 	bool validMove(char currX, int currY, char targetX, int targetY);
 

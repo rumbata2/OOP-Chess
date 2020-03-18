@@ -5,23 +5,28 @@ using namespace std;
 class Piece
 {
 protected:
-	char xCoordinate;
-	int yCoordinate;
 	bool isWhite;
+	bool hasMoved;
+	int plySinceFirstMove;
 
 public:
-	Piece(char = 'a', int = 1, bool = 0);
-	bool validCoordinates(char, int);
+	Piece(bool = 0, bool = 0, int = 0);
 	virtual string name() = 0;
 	virtual bool movementPattern(char, int, char, int) = 0;
 	bool getIsWhite() {
 		return isWhite;
 	}
-	char getX() {
-		return xCoordinate;
+	void enableHasMoved() {
+		this->hasMoved = true;
 	}
-	int getY() {
-		return yCoordinate;
+	bool getHasMoved() {
+		return hasMoved;
+	}
+	void incrementPlySinceFirstMove() {
+		plySinceFirstMove++;
+	}
+	int getPlySinceFirstMove() {
+		return plySinceFirstMove;
 	}
 };
 

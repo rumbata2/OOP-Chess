@@ -2,7 +2,7 @@
 #include "King.h"
 
 
-King::King(char xCoordinate, int yCoordinate, bool isWhite) : Piece(xCoordinate, yCoordinate, isWhite) {}
+King::King(bool isWhite, bool hasMoved, int plySinceFirstMove) : Piece(isWhite, hasMoved, plySinceFirstMove) {}
 
 bool King::movementPattern(char currX, int currY, char targetX, int targetY) {
 	return (abs(currX - targetX) + abs(currY - targetY) == 1 ||

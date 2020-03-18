@@ -2,13 +2,10 @@
 #include "Bishop.h"
 
 
-Bishop::Bishop(char xCoordinate, int yCoordinate, bool isWhite) : Piece(xCoordinate, yCoordinate, isWhite) {}
+Bishop::Bishop(bool isWhite, bool hasMoved, int plySinceFirstMove) : Piece(isWhite, hasMoved, plySinceFirstMove) {}
 
 bool Bishop::movementPattern(char currX, int currY, char targetX, int targetY) {
-	if (abs(currX - targetX) == abs(currY - targetY)) {
-		return true;
-	}
-	return false;
+	return (abs(currX - targetX) == abs(currY - targetY));
 }
 
 string Bishop::name() {

@@ -3,109 +3,50 @@
 
 
 Board::Board() {
-	
-	int y = 0;
-	std::vector<Box> row;
+	std::vector<Piece*> row;
 	for (int i = 0; i < 8; i++) {
-		boxes.push_back(row);
+		squares.push_back(row);
 	}
-	for (int i = 8; i >= 1; i--) {
-		for (char c = 'a'; c <= 'h'; c++) {
-			Box temp(c, i);
-			boxes[y].push_back(temp);
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 8; j++) {
+			squares[i].push_back(nullptr);
 		}
-		y++;
 	}
 }
-
-Board::~Board() {
-	for (int i = 0; i < 8; i++) {
-		delete whitePawns[i];
-		delete blackPawns[i];
-	}
-	for (int i = 0; i < 2; i++) {
-		delete whiteRooks[i];
-		delete blackRooks[i];
-		delete whiteKnights[i];
-		delete blackKnights[i];
-		delete whiteBishops[i];
-		delete blackBishops[i];
-	}
-	delete whiteKing;
-	delete whiteQueen;
-	delete blackKing;
-	delete blackQueen;
-}
-
 
 void Board::initializeBoard() {
-	for (int i = 0; i < 8; i++) {
-		whitePawns[i] = new Pawn('a' + i, 2, 1);
-		boxes[6][i].setPiece(whitePawns[i]);
-		blackPawns[i] = new Pawn('a' + i, 7, 0);
-		boxes[1][i].setPiece(blackPawns[i]);
-	}
-	whiteRooks[0] = new Rook('a', 1, 1);
-	whiteRooks[1] = new Rook('h', 1, 1);
-	boxes[7][0].setPiece(whiteRooks[0]);
-	boxes[7][7].setPiece(whiteRooks[1]);
-
-	whiteKnights[0] = new Knight('b', 1, 1);
-	whiteKnights[1] = new Knight('g', 1, 1);
-	boxes[7][1].setPiece(whiteKnights[0]);
-	boxes[7][6].setPiece(whiteKnights[1]);
-
-	whiteBishops[0] = new Bishop('c', 1, 1);
-	whiteBishops[1] = new Bishop('f', 1, 1);
-	boxes[7][2].setPiece(whiteBishops[0]);
-	boxes[7][5].setPiece(whiteBishops[1]);
-
-	whiteQueen = new Queen('d', 1, 1);
-	boxes[7][3].setPiece(whiteQueen);
-
-	whiteKing = new King('e', 1, 1);
-	boxes[7][4].setPiece(whiteKing);
-
+	for (int i = 0; i < 8; i++) 
+		squares[6][i] = new Pawn(1, 0, 0);		
 	
+	squares[7][0] = new Rook(1, 0, 0);
+	squares[7][1] = new Knight(1, 0, 0);
+	squares[7][2] = new Bishop(1, 0, 0);
+	squares[7][3] = new Queen(1, 0, 0);
+	squares[7][4] = new King(1, 0, 0);
+	squares[7][5] = new Bishop(1, 0, 0);
+	squares[7][6] = new Knight(1, 0, 0);
+	squares[7][7] = new Rook(1, 0, 0);
+
+	for (int i = 0; i < 8; i++) 
+		squares[1][i] = new Pawn(0, 0, 0);
 	
-	blackRooks[0] = new Rook('a', 8, 0);
-	blackRooks[1] = new Rook('h', 8, 0);
-	boxes[0][0].setPiece(blackRooks[0]);
-	boxes[0][7].setPiece(blackRooks[1]);
-
-	blackKnights[0] = new Knight('b', 8, 0);
-	blackKnights[1] = new Knight('g', 8, 0);
-	boxes[0][1].setPiece(blackKnights[0]);
-	boxes[0][6].setPiece(blackKnights[1]);
-
-	blackBishops[0] = new Bishop('c', 8, 0);
-	blackBishops[1] = new Bishop('f', 8, 0);
-	boxes[0][2].setPiece(blackBishops[0]);
-	boxes[0][5].setPiece(blackBishops[1]);
-
-	blackQueen = new Queen('d', 8, 0);
-	boxes[0][3].setPiece(blackQueen);
-
-	blackKing = new King('e', 8, 0);
-	boxes[0][4].setPiece(blackKing);
+	squares[0][0] = new Rook(0, 0, 0);
+	squares[0][1] = new Knight(0, 0, 0);
+	squares[0][2] = new Bishop(0, 0, 0);
+	squares[0][3] = new Queen(0, 0, 0);
+	squares[0][4] = new King(0, 0, 0);
+	squares[0][5] = new Bishop(0, 0, 0);
+	squares[0][6] = new Knight(0, 0, 0);
+	squares[0][7] = new Rook(0, 0, 0);
 }
 
-
-
-void Board::getBoxesInfo() {
-	for (int i = 0; i < boxes.size(); i++) {
-		for (int j = 0; j < boxes[i].size(); j++) {
-			cout << boxes[i][j].getXCoordinate() << " " << boxes[i][j].getYCoordinate() << "\n";
-		}
-	}
-}
 
 Piece* Board::getPiece(char x, int y) {
-	return boxes[convertToMatrixCoordinates(x, y).first][convertToMatrixCoordinates(x, y).second].getBoxPiece();
+	return squares[convertToMatrixCoordinates(x, y).first][convertToMatrixCoordinates(x, y).second];
 }
 
 void Board::setPiece(char x, int y, Piece* piece) {
-	boxes[convertToMatrixCoordinates(x, y).first][convertToMatrixCoordinates(x, y).second].setPiece(piece);
+	squares[convertToMatrixCoordinates(x, y).first][convertToMatrixCoordinates(x, y).second] = piece;
 }
 
 pair<char, int> convertToChessCoordinates(int i, int j) {
@@ -197,28 +138,73 @@ bool Board::blockedPath(Piece* pieceToMove, char currX, int currY, char targetX,
 
 bool Board::pawnTakeRule(Piece* piece, char currX, int currY, char targetX, int targetY) {
 	if (piece->getIsWhite()) {
-		if (this->getPiece(currX - 1, currY + 1) && targetX == currX-1 && targetY == currY + 1 ||
-			this->getPiece(currX + 1, currY + 1) && targetX == currX + 1 && targetY == currY + 1) {
+		if (targetX == currX - 1 && targetY == currY + 1 && this->getPiece(currX - 1, currY + 1) ||
+			targetX == currX + 1 && targetY == currY + 1 && this->getPiece(currX + 1, currY + 1)) {
 			return true;
 		}
 	}
 	else {
-		if (this->getPiece(currX - 1, currY - 1) && targetX == currX - 1 && targetY == currY - 1 || 
-			this->getPiece(currX + 1, currY - 1) && targetX == currX + 1 && targetY == currY - 1) {
+		if (targetX == currX - 1 && targetY == currY - 1 && this->getPiece(currX - 1, currY - 1) ||
+			targetX == currX + 1 && targetY == currY - 1 && this->getPiece(currX + 1, currY - 1)) {
 			return true;
 		}
 	}
 	return false;
 }
 
+bool Board::enPassant(char currX, int currY, char targetX, int targetY) {
+	Piece* piece = this->getPiece(currX, currY);
+	if (piece->getIsWhite()) {
+		if (targetX == currX - 1 && targetY == currY + 1 && targetY == 6 && this->getPiece(currX - 1, currY) &&
+			this->getPiece(currX - 1, currY)->name() == "Pawn" && this->getPiece(currX - 1, currY)->getPlySinceFirstMove() == 1) {
+			return true;			
+		} 
+		else if (targetX == currX + 1 && targetY == currY + 1 && targetY == 6 && this->getPiece(currX + 1, currY) &&
+			this->getPiece(currX + 1, currY)->name() == "Pawn" && this->getPiece(currX + 1, currY)->getPlySinceFirstMove() == 1) {
+			return true;
+		}
+	}
+	else {
+		if (targetX == currX - 1 && targetY == currY - 1 && targetY == 3 && this->getPiece(currX - 1, currY) &&
+			this->getPiece(currX - 1, currY)->name() == "Pawn" && this->getPiece(currX - 1, currY)->getPlySinceFirstMove() == 1) {
+			return true;
+		}
+		else if (targetX == currX + 1 && targetY == currY - 1 && targetY == 3 && this->getPiece(currX + 1, currY) &&
+			this->getPiece(currX + 1, currY)->name() == "Pawn" && this->getPiece(currX + 1, currY)->getPlySinceFirstMove() == 1) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Board::kingSideCastle(char currX, int currY, char targetX, int targetY) {
+	Piece* pieceToMove = this->getPiece(currX, currY);
+	int row = pieceToMove->getIsWhite() ? 1 : 8;
+	return (pieceToMove->name() == "King" && !this->getPiece('f', row) && !this->getPiece('g', row) && this->getPiece('h', row)->name() == "Rook" &&
+		currX == 'e' && currY == row && targetX == 'e' + 2 && targetY == row &&
+		!pieceToMove->getHasMoved() && !this->getPiece('h', row)->getHasMoved());
+		
+}
+
+bool Board::queenSideCastle(char currX, int currY, char targetX, int targetY) {
+	Piece* pieceToMove = this->getPiece(currX, currY);
+	int row = pieceToMove->getIsWhite() ? 1 : 8;
+	return (pieceToMove->name() == "King" && this->getPiece('a', row)->name() == "Rook" && !this->getPiece('b', row) && !this->getPiece('c', row) && !this->getPiece('d', row) &&
+		currX == 'e' && currY == row && targetX == 'e' - 2 && targetY == row); 
+}
+
 bool Board::validMove(char currX, int currY, char targetX, int targetY) {
 	Piece* pieceToMove = this->getPiece(currX, currY);
 
-	if (pieceToMove->name() != "Pawn") {
+	if (pieceToMove->name() == "King") {
+		return pieceToMove->movementPattern(currX, currY, targetX, targetY) && !blockedPath(pieceToMove, currX, currY, targetX, targetY) ||
+			kingSideCastle(currX, currY, targetX, targetY) || queenSideCastle(currX, currY, targetX, targetY);
+	}
+	else if (pieceToMove->name() != "Pawn") {
 		return pieceToMove->movementPattern(currX, currY, targetX, targetY) && !blockedPath(pieceToMove, currX, currY, targetX, targetY);
 	}
 	else {
-		return ((pieceToMove->movementPattern(currX, currY, targetX, targetY) && !blockedPath(pieceToMove, currX, currY, targetX, targetY))
-				|| pawnTakeRule(pieceToMove, currX, currY, targetX, targetY));
+		return (pieceToMove->movementPattern(currX, currY, targetX, targetY) && !blockedPath(pieceToMove, currX, currY, targetX, targetY))
+			|| pawnTakeRule(pieceToMove, currX, currY, targetX, targetY) || enPassant(currX, currY, targetX, targetY);
 	}
 }

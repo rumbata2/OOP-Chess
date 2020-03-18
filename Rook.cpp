@@ -2,7 +2,7 @@
 #include "Rook.h"
 
 
-Rook::Rook(char xCoordinate, int yCoordinate, bool isWhite) : Piece(xCoordinate, yCoordinate, isWhite) {}
+Rook::Rook(bool isWhite, bool hasMoved, int plySinceFirstMove) : Piece(isWhite, hasMoved, plySinceFirstMove) {}
 
 bool Rook::movementPattern(char currX, int currY, char targetX, int targetY) {
 	return (currX - targetX == 0 || currY - targetY == 0);

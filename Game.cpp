@@ -19,7 +19,6 @@ bool Game::OnUserCreate() {
 
 	b = new Board();
 
-
 	b->initializeBoard();
 	drawBoard(b);
 	return true;
@@ -48,11 +47,22 @@ bool Game::OnUserUpdate(float elapsedTime) {
 		else {
 			if (b->getPiece(pressedX, pressedY)) {
 				if (selectedPiece->getIsWhite() && !b->getPiece(pressedX, pressedY)->getIsWhite()  || //white takes black
-					!selectedPiece->getIsWhite() && b->getPiece(pressedX, pressedY)->getIsWhite()) {//black takes white
+					!selectedPiece->getIsWhite() && b->getPiece(pressedX, pressedY)->getIsWhite()) { //black takes white
 					if (b->validMove(lastPressedX, lastPressedY, pressedX, pressedY)) {
 						b->setPiece(lastPressedX, lastPressedY, nullptr);
 						b->setPiece(pressedX, pressedY, selectedPiece);
+
 						drawBoard(b);
+
+						if (!selectedPiece->getHasMoved()) {
+							selectedPiece->enableHasMoved();
+						}
+						for (char c = 'a'; c <= 'h'; c++)
+							for (int a = 1; a <= 8; a++)
+								if (b->getPiece(c, a))
+									if(b->getPiece(c, a)->getHasMoved())
+										b->getPiece(c, a)->incrementPlySinceFirstMove();
+
 						selectedPiece = nullptr;
 						whitesTurn = !whitesTurn;
 					}			
@@ -68,10 +78,40 @@ bool Game::OnUserUpdate(float elapsedTime) {
 			}
 			else { // moving
 				if (b->validMove(lastPressedX, lastPressedY, pressedX, pressedY)) {
-					b->setPiece(lastPressedX, lastPressedY, nullptr);
-					b->setPiece(pressedX, pressedY, selectedPiece);
+					if (b->kingSideCastle(lastPressedX, lastPressedY, pressedX, pressedY)) {
+						b->setPiece(lastPressedX, lastPressedY, nullptr);
+						b->setPiece(pressedX, pressedY, selectedPiece);
+						b->setPiece(pressedX - 1, pressedY, b->getPiece('h', pressedY));
+						b->setPiece('h', pressedY, nullptr);				
+					}
+					else if (b->queenSideCastle(lastPressedX, lastPressedY, pressedX, pressedY)) {
+						b->setPiece(lastPressedX, lastPressedY, nullptr);
+						b->setPiece(pressedX, pressedY, selectedPiece);
+						b->setPiece(pressedX + 1, pressedY, b->getPiece('a', pressedY));
+						b->setPiece('a', pressedY, nullptr);
+					}
+					else if (b->enPassant(lastPressedX, lastPressedY, pressedX, pressedY)) {
+						b->setPiece(lastPressedX, lastPressedY, nullptr);
+						b->setPiece(pressedX, pressedY, selectedPiece);
+						b->setPiece(pressedX, pressedY + pow(-1, selectedPiece->getIsWhite()), nullptr);
+					}
+					else {
+						b->setPiece(lastPressedX, lastPressedY, nullptr);
+						b->setPiece(pressedX, pressedY, selectedPiece);
+					}	
+
+
+
 					drawBoard(b);
 					whitesTurn = !whitesTurn;
+					if (!selectedPiece->getHasMoved()) 
+						selectedPiece->enableHasMoved();
+					for (char c = 'a'; c <= 'h'; c++)
+						for (int a = 1; a <= 8; a++)
+							if (b->getPiece(c, a))
+								if(b->getPiece(c,a)->getHasMoved())
+									b->getPiece(c, a)->incrementPlySinceFirstMove();
+
 					selectedPiece = nullptr;
 				}
 			}	

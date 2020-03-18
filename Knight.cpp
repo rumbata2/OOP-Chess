@@ -2,7 +2,7 @@
 #include "Knight.h"
 
 
-Knight::Knight(char xCoordinate, int yCoordinate, bool isWhite) : Piece(xCoordinate, yCoordinate, isWhite) {}
+Knight::Knight(bool isWhite, bool hasMoved, int plySinceFirstMove) : Piece(isWhite, hasMoved, plySinceFirstMove) {}
 
 bool Knight::movementPattern(char currX, int currY, char targetX, int targetY) {
 	return (abs(abs(currX - targetX) - abs(currY - targetY)) == 1 && abs(currX - targetX) + abs(currY - targetY) == 3);

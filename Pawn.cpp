@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Pawn.h"
 
-Pawn::Pawn(char xCoordinate, int yCoordinate, bool isWhite) : Piece(xCoordinate, yCoordinate, isWhite) {}
+Pawn::Pawn(bool isWhite, bool hasMoved, int plySinceFirstMove) : Piece(isWhite, hasMoved, plySinceFirstMove) {}
 
 bool Pawn::movementPattern(char currX, int currY, char targetX, int targetY) {
 	if (currX == targetX) {

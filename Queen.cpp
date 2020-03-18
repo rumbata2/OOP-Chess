@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "Queen.h"
 
-Queen::Queen(char xCoordinate, int yCoordinate, bool isWhite) : Piece(xCoordinate, yCoordinate, isWhite),
-																Bishop(xCoordinate, yCoordinate, isWhite),
-																Rook(xCoordinate, yCoordinate, isWhite) {}
+Queen::Queen(bool isWhite, bool hasMoved, int plySinceFirstMove) : Piece(isWhite, hasMoved, plySinceFirstMove),
+																   Bishop(isWhite, hasMoved, plySinceFirstMove),
+																   Rook(isWhite, hasMoved, plySinceFirstMove) {}
 
 bool Queen::movementPattern(char currX, int currY, char targetX, int targetY) {
 	return Bishop::movementPattern(currX, currY, targetX, targetY) || Rook::movementPattern(currX, currY, targetX, targetY);

@@ -4,7 +4,7 @@
 class Queen : public Bishop, Rook
 {
 public:
-	Queen(char, int, bool);
+	Queen(bool, bool, int);
 	bool movementPattern(char currX, int currY, char targetX, int targetY);
 	virtual string name();
 };

@@ -3,7 +3,7 @@
 class Knight : virtual public Piece
 {
 public:
-	Knight(char, int, bool);
+	Knight(bool, bool, int);
 	bool movementPattern(char currX, int currY, char targetX, int targetY);
 	string name();
 };
