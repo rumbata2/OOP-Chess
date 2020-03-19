@@ -21,12 +21,16 @@ public:
 
 	Piece* getPiece(char x, int y);
 	void setPiece(char x, int y, Piece* piece);
+	pair<char, int> findKing(bool white);
 
 	bool kingSideCastle(char currX, int currY, char targetX, int targetY);
 	bool queenSideCastle(char currX, int currY, char targetX, int targetY);
 	bool pawnTakeRule(Piece* piece, char currX, int currY, char targetX, int targetY);
 	bool enPassant(char currX, int currY, char targetX, int targetY);
 	bool blockedPath(Piece* pieceToMove, char currX, int currY, char targetX, int targetY);
+	int isAttacked(char X, int Y, bool isWhite);
+	bool checkAfterPly(char currX, int currY, char targetX, int targetY);
+
 	bool validMove(char currX, int currY, char targetX, int targetY);
 
 };

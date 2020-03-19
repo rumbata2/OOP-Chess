@@ -53,18 +53,24 @@ bool Game::OnUserUpdate(float elapsedTime) {
 						b->setPiece(pressedX, pressedY, selectedPiece);
 
 						drawBoard(b);
+						whitesTurn = !whitesTurn;
 
 						if (!selectedPiece->getHasMoved()) {
 							selectedPiece->enableHasMoved();
 						}
 						for (char c = 'a'; c <= 'h'; c++)
 							for (int a = 1; a <= 8; a++)
-								if (b->getPiece(c, a))
-									if(b->getPiece(c, a)->getHasMoved())
-										b->getPiece(c, a)->incrementPlySinceFirstMove();
-
+								if (b->getPiece(c, a) && b->getPiece(c,a)->getHasMoved())
+									b->getPiece(c, a)->incrementPlySinceFirstMove();									
+										
 						selectedPiece = nullptr;
-						whitesTurn = !whitesTurn;
+
+						if (b->isAttacked(b->findKing(1).first, b->findKing(1).second, 1)) {
+							cout << "White king is in check!" << endl;
+						}
+						if (b->isAttacked(b->findKing(0).first, b->findKing(0).second, 0)) {
+							cout << "Black king is in check!" << endl;
+						}
 					}			
 				}
 				else { //selecting a different piece of the same color
@@ -104,19 +110,32 @@ bool Game::OnUserUpdate(float elapsedTime) {
 
 					drawBoard(b);
 					whitesTurn = !whitesTurn;
+
 					if (!selectedPiece->getHasMoved()) 
 						selectedPiece->enableHasMoved();
 					for (char c = 'a'; c <= 'h'; c++)
 						for (int a = 1; a <= 8; a++)
-							if (b->getPiece(c, a))
-								if(b->getPiece(c,a)->getHasMoved())
-									b->getPiece(c, a)->incrementPlySinceFirstMove();
+							if (b->getPiece(c, a) && b->getPiece(c,a)->getHasMoved())
+								b->getPiece(c, a)->incrementPlySinceFirstMove();								
 
 					selectedPiece = nullptr;
+					if (b->isAttacked(b->findKing(1).first, b->findKing(1).second, 1)) {
+						cout << "White king is in check!" << endl;
+					}
+					if (b->isAttacked(b->findKing(0).first, b->findKing(0).second, 0)) {
+						cout << "Black king is in check!" << endl;
+					}
 				}
 			}	
 		}
 	}
+
+
+	/*else if (GetMouse(1).bPressed) {
+		char pressedX = convertToChessCoordinates(GetMouseY() / PIECE_SIZE, GetMouseX() / PIECE_SIZE).first;
+		int pressedY = convertToChessCoordinates(GetMouseY() / PIECE_SIZE, GetMouseX() / PIECE_SIZE).second;
+		b->isAttacked(pressedX, pressedY, 1);
+	}*/
 	
 	return true;
 }

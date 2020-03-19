@@ -1,4 +1,5 @@
 ﻿  Game.cpp
-c:\users\user\source\repos\oop chess\game.cpp(96): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-c:\users\user\source\repos\oop chess\game.cpp(171): warning C4715: 'Game::getPieceSprite': not all control paths return a value
+c:\users\user\source\repos\oop chess\game.h(4): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\user\source\repos\oop chess\game.cpp(102): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+c:\users\user\source\repos\oop chess\game.cpp(190): warning C4715: 'Game::getPieceSprite': not all control paths return a value
   OOP Chess.vcxproj -> C:\Users\User\source\repos\OOP Chess\Debug\OOP Chess.exe

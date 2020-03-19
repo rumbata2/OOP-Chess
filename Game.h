@@ -1,10 +1,7 @@
 #pragma once
 #include "olcPixelGameEngine.h"
 #include "Board.h"
-#include <iostream>
-#include <typeinfo>
-
-
+#include <iostream>|
 
 const int32_t PIECE_SIZE = 80;
 
