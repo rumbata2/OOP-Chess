@@ -66,10 +66,12 @@ bool Game::OnUserUpdate(float elapsedTime) {
 						selectedPiece = nullptr;
 
 						if (b->isAttacked(b->findKing(1).first, b->findKing(1).second, 1)) {
-							cout << "White king is in check!" << endl;
+							if (b->Mate(1)) cout << "Checkmate, black wins" << endl;
+							else cout << "White king is in check!" << endl;
 						}
 						if (b->isAttacked(b->findKing(0).first, b->findKing(0).second, 0)) {
-							cout << "Black king is in check!" << endl;
+							if (b->Mate(0)) cout << "Checkmate, white wins" << endl;
+							else cout << "Black king is in check!" << endl;
 						}
 					}			
 				}
@@ -120,10 +122,12 @@ bool Game::OnUserUpdate(float elapsedTime) {
 
 					selectedPiece = nullptr;
 					if (b->isAttacked(b->findKing(1).first, b->findKing(1).second, 1)) {
-						cout << "White king is in check!" << endl;
+						if (b->Mate(1)) cout << "Checkmate, black wins" << endl;
+						else cout << "White king is in check!" << endl;
 					}
 					if (b->isAttacked(b->findKing(0).first, b->findKing(0).second, 0)) {
-						cout << "Black king is in check!" << endl;
+						if (b->Mate(0)) cout << "Checkmate, white wins" << endl;
+						else cout << "Black king is in check!" << endl;
 					}
 				}
 			}	

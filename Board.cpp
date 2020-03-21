@@ -233,16 +233,32 @@ bool Board::queenSideCastle(char currX, int currY, char targetX, int targetY) {
 bool Board::checkAfterPly(char currX, int currY, char targetX, int targetY) {
 	Board copy(*this);
 	Piece* pieceToMove = this->getPiece(currX, currY);
-	bool white = pieceToMove->getIsWhite();
+	bool white = pieceToMove->getIsWhite(); 
 	copy.setPiece(targetX, targetY, pieceToMove);
 	copy.setPiece(currX, currY, nullptr);
 	return copy.isAttacked(copy.findKing(white).first, copy.findKing(white).second, white);
 }
 
+bool Board::Mate(bool white) {
+	bool result = true;
+	for (char c = 'a'; c <= 'h'; c++) {
+		for (int i = 1; i <= 8; i++) {
+			if (this->getPiece(c, i) && this->getPiece(c, i)->getIsWhite() == white) {
+				if (hasValidMoves(c, i))
+					result = false;
+			}
+		}
+	}
+	//cout << result << endl;
+	return result;
+}
+
+
 bool Board::validMove(char currX, int currY, char targetX, int targetY) {
 	Piece* pieceToMove = this->getPiece(currX, currY);
-	bool move;
+	if (this->getPiece(targetX, targetY) && this->getPiece(targetX, targetY)->getIsWhite() == pieceToMove->getIsWhite()) return false;
 
+	bool move;
 	if (pieceToMove->name() == "King") {
 		move =  pieceToMove->movementPattern(currX, currY, targetX, targetY) && !blockedPath(pieceToMove, currX, currY, targetX, targetY) ||
 			kingSideCastle(currX, currY, targetX, targetY) || queenSideCastle(currX, currY, targetX, targetY);
@@ -251,8 +267,24 @@ bool Board::validMove(char currX, int currY, char targetX, int targetY) {
 		move =  pieceToMove->movementPattern(currX, currY, targetX, targetY) && !blockedPath(pieceToMove, currX, currY, targetX, targetY);
 	}
 	else {
-		move =  (pieceToMove->movementPattern(currX, currY, targetX, targetY) && !blockedPath(pieceToMove, currX, currY, targetX, targetY))
-			|| pawnTakeRule(pieceToMove, currX, currY, targetX, targetY) || enPassant(currX, currY, targetX, targetY);
+		if (!this->getPiece(targetX, targetY)) {
+			move = (pieceToMove->movementPattern(currX, currY, targetX, targetY) && !blockedPath(pieceToMove, currX, currY, targetX, targetY)) ||
+					enPassant(currX, currY, targetX, targetY);
+		}
+		else {
+			move = pawnTakeRule(pieceToMove, currX, currY, targetX, targetY);
+		}
 	}
 	return move && !this->checkAfterPly(currX, currY, targetX, targetY);
+}
+
+bool Board::hasValidMoves(char currX, int currY) {
+	bool result = false;
+	for (char c = 'a'; c <= 'h'; c++) {
+		for (int i = 1; i <= 8; i++) {
+			if ((c != currX || i != currY) && validMove(currX, currY, c, i))
+				result = true;
+		}
+	}
+	return result;
 }
