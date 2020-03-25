@@ -23,6 +23,8 @@ public:
 	bool OnUserCreate() override;
 	bool OnUserUpdate(float elapsedtime);
 
+	void updatePlySinceFirstMove();
+	void checkAndOrMate();
 
 	olc::Sprite* getPieceSprite(Piece* piece);
 	void drawSquares();

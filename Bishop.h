@@ -7,4 +7,3 @@ public:
 	bool movementPattern(char currX, int currY, char targetX, int targetY);
 	string name();
 };
-

@@ -54,25 +54,10 @@ bool Game::OnUserUpdate(float elapsedTime) {
 
 						drawBoard(b);
 						whitesTurn = !whitesTurn;
+						this->updatePlySinceFirstMove();					
+						this->checkAndOrMate();
 
-						if (!selectedPiece->getHasMoved()) {
-							selectedPiece->enableHasMoved();
-						}
-						for (char c = 'a'; c <= 'h'; c++)
-							for (int a = 1; a <= 8; a++)
-								if (b->getPiece(c, a) && b->getPiece(c,a)->getHasMoved())
-									b->getPiece(c, a)->incrementPlySinceFirstMove();									
-										
 						selectedPiece = nullptr;
-
-						if (b->isAttacked(b->findKing(1).first, b->findKing(1).second, 1)) {
-							if (b->Mate(1)) cout << "Checkmate, black wins" << endl;
-							else cout << "White king is in check!" << endl;
-						}
-						if (b->isAttacked(b->findKing(0).first, b->findKing(0).second, 0)) {
-							if (b->Mate(0)) cout << "Checkmate, white wins" << endl;
-							else cout << "Black king is in check!" << endl;
-						}
 					}			
 				}
 				else { //selecting a different piece of the same color
@@ -108,27 +93,12 @@ bool Game::OnUserUpdate(float elapsedTime) {
 						b->setPiece(pressedX, pressedY, selectedPiece);
 					}	
 
-
-
 					drawBoard(b);
 					whitesTurn = !whitesTurn;
+					this->updatePlySinceFirstMove();
+					this->checkAndOrMate();
 
-					if (!selectedPiece->getHasMoved()) 
-						selectedPiece->enableHasMoved();
-					for (char c = 'a'; c <= 'h'; c++)
-						for (int a = 1; a <= 8; a++)
-							if (b->getPiece(c, a) && b->getPiece(c,a)->getHasMoved())
-								b->getPiece(c, a)->incrementPlySinceFirstMove();								
-
-					selectedPiece = nullptr;
-					if (b->isAttacked(b->findKing(1).first, b->findKing(1).second, 1)) {
-						if (b->Mate(1)) cout << "Checkmate, black wins" << endl;
-						else cout << "White king is in check!" << endl;
-					}
-					if (b->isAttacked(b->findKing(0).first, b->findKing(0).second, 0)) {
-						if (b->Mate(0)) cout << "Checkmate, white wins" << endl;
-						else cout << "Black king is in check!" << endl;
-					}
+					selectedPiece = nullptr;				
 				}
 			}	
 		}
@@ -142,6 +112,27 @@ bool Game::OnUserUpdate(float elapsedTime) {
 	}*/
 	
 	return true;
+}
+
+void Game::updatePlySinceFirstMove() {
+	if (!selectedPiece->getHasMoved()) {
+		selectedPiece->enableHasMoved();
+	}
+	for (char c = 'a'; c <= 'h'; c++)
+		for (int a = 1; a <= 8; a++)
+			if (b->getPiece(c, a) && b->getPiece(c, a)->getHasMoved())
+				b->getPiece(c, a)->incrementPlySinceFirstMove();
+}
+
+void Game::checkAndOrMate() {
+	if (b->isAttacked(b->findKing(1).first, b->findKing(1).second, 1)) {
+		if (b->Mate(1)) cout << "Checkmate, black wins" << endl;
+		else cout << "White king is in check!" << endl;
+	}
+	if (b->isAttacked(b->findKing(0).first, b->findKing(0).second, 0)) {
+		if (b->Mate(0)) cout << "Checkmate, white wins" << endl;
+		else cout << "Black king is in check!" << endl;
+	}
 }
 
 void Game::drawSquares() {
@@ -188,7 +179,7 @@ olc::Sprite* Game::getPieceSprite(Piece* piece) {
 			return sprites[9];
 		else if (piece->name() == "Queen")
 			return sprites[10];
-		else //if (piece->name() == "King")
+		else if (piece->name() == "King")
 			return sprites[11];
 	}
 }
