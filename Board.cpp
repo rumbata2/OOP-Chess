@@ -217,8 +217,8 @@ bool Board::enPassant(char currX, int currY, char targetX, int targetY) {
 bool Board::kingSideCastle(char currX, int currY, char targetX, int targetY) {
 	Piece* pieceToMove = this->getPiece(currX, currY);
 	int row = pieceToMove->getIsWhite() ? 1 : 8;
-	return (pieceToMove->name() == "King" && !this->getPiece('f', row) && !this->getPiece('g', row) && this->getPiece('h', row)->name() == "Rook" &&
-		currX == 'e' && currY == row && targetX == 'e' + 2 && targetY == row &&
+	return (currX == 'e' && currY == row && targetX == 'e' + 2 && targetY == row &&
+		pieceToMove->name() == "King" && !this->getPiece('f', row) && !this->getPiece('g', row) && this->getPiece('h', row) &&
 		!pieceToMove->getHasMoved() && !this->getPiece('h', row)->getHasMoved());
 		
 }
@@ -226,8 +226,9 @@ bool Board::kingSideCastle(char currX, int currY, char targetX, int targetY) {
 bool Board::queenSideCastle(char currX, int currY, char targetX, int targetY) {
 	Piece* pieceToMove = this->getPiece(currX, currY);
 	int row = pieceToMove->getIsWhite() ? 1 : 8;
-	return (pieceToMove->name() == "King" && this->getPiece('a', row)->name() == "Rook" && !this->getPiece('b', row) && !this->getPiece('c', row) && !this->getPiece('d', row) &&
-		currX == 'e' && currY == row && targetX == 'e' - 2 && targetY == row); 
+	return (currX == 'e' && currY == row && targetX == 'e' - 2 && targetY == row &&
+		pieceToMove->name() == "King" && this->getPiece('a', row) && !this->getPiece('b', row) && !this->getPiece('c', row) && !this->getPiece('d', row) &&
+		!pieceToMove->getHasMoved() && !this->getPiece('a', row)->getHasMoved());
 }
 
 bool Board::checkAfterPly(char currX, int currY, char targetX, int targetY) {
@@ -249,7 +250,6 @@ bool Board::Mate(bool white) {
 			}
 		}
 	}
-	//cout << result << endl;
 	return result;
 }
 
@@ -260,21 +260,20 @@ bool Board::validMove(char currX, int currY, char targetX, int targetY) {
 
 	bool move;
 	if (pieceToMove->name() == "King") {
-		move =  pieceToMove->movementPattern(currX, currY, targetX, targetY) && !blockedPath(pieceToMove, currX, currY, targetX, targetY) ||
+		move =  pieceToMove->movementPattern(currX, currY, targetX, targetY) ||
 			kingSideCastle(currX, currY, targetX, targetY) || queenSideCastle(currX, currY, targetX, targetY);
 	}
-	else if (pieceToMove->name() != "Pawn") {
-		move =  pieceToMove->movementPattern(currX, currY, targetX, targetY) && !blockedPath(pieceToMove, currX, currY, targetX, targetY);
+	else if (pieceToMove->name() == "Pawn") {
+		if (!this->getPiece(targetX, targetY)) 
+			move = (pieceToMove->movementPattern(currX, currY, targetX, targetY) && !blockedPath(pieceToMove, currX, currY, targetX, targetY)) ||
+				enPassant(currX, currY, targetX, targetY);	
+		else 
+			move = pawnTakeRule(pieceToMove, currX, currY, targetX, targetY);	
 	}
 	else {
-		if (!this->getPiece(targetX, targetY)) {
-			move = (pieceToMove->movementPattern(currX, currY, targetX, targetY) && !blockedPath(pieceToMove, currX, currY, targetX, targetY)) ||
-					enPassant(currX, currY, targetX, targetY);
-		}
-		else {
-			move = pawnTakeRule(pieceToMove, currX, currY, targetX, targetY);
-		}
+		move = pieceToMove->movementPattern(currX, currY, targetX, targetY) && !blockedPath(pieceToMove, currX, currY, targetX, targetY);
 	}
+	
 	return move && !this->checkAfterPly(currX, currY, targetX, targetY);
 }
 

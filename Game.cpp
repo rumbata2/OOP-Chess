@@ -25,85 +25,8 @@ bool Game::OnUserCreate() {
 };
 
 bool Game::OnUserUpdate(float elapsedTime) {
-	if (GetMouse(0).bPressed) {
-		char pressedX = convertToChessCoordinates(GetMouseY() / PIECE_SIZE, GetMouseX() / PIECE_SIZE).first;
-		int pressedY = convertToChessCoordinates(GetMouseY() / PIECE_SIZE, GetMouseX() / PIECE_SIZE).second;
-		int32_t xTileCoord = GetMouseX() - (GetMouseX() % PIECE_SIZE);
-		int32_t yTileCoord = GetMouseY() - (GetMouseY() % PIECE_SIZE);
-		if (!selectedPiece) { //selecting a piece
-			if (b->getPiece(pressedX, pressedY)) {
-				if (b->getPiece(pressedX, pressedY)->getIsWhite() == whitesTurn) {
-					drawBoard(b);
-					DrawRect(xTileCoord, yTileCoord, PIECE_SIZE - 1, PIECE_SIZE - 1, olc::GREEN);
-					selectedPiece = b->getPiece(pressedX, pressedY);
-
-					lastPressedX = pressedX;
-					lastPressedY = pressedY;
-				}
-				
-			}
-		}
-		
-		else {
-			if (b->getPiece(pressedX, pressedY)) {
-				if (selectedPiece->getIsWhite() && !b->getPiece(pressedX, pressedY)->getIsWhite()  || //white takes black
-					!selectedPiece->getIsWhite() && b->getPiece(pressedX, pressedY)->getIsWhite()) { //black takes white
-					if (b->validMove(lastPressedX, lastPressedY, pressedX, pressedY)) {
-						b->setPiece(lastPressedX, lastPressedY, nullptr);
-						b->setPiece(pressedX, pressedY, selectedPiece);
-
-						drawBoard(b);
-						whitesTurn = !whitesTurn;
-						this->updatePlySinceFirstMove();					
-						this->checkAndOrMate();
-
-						selectedPiece = nullptr;
-					}			
-				}
-				else { //selecting a different piece of the same color
-					selectedPiece = b->getPiece(pressedX, pressedY);
-					drawBoard(b);
-					DrawRect(xTileCoord, yTileCoord, PIECE_SIZE - 1, PIECE_SIZE - 1, olc::GREEN);
-
-					lastPressedX = pressedX;
-					lastPressedY = pressedY;
-				}		
-			}
-			else { // moving
-				if (b->validMove(lastPressedX, lastPressedY, pressedX, pressedY)) {
-					if (b->kingSideCastle(lastPressedX, lastPressedY, pressedX, pressedY)) {
-						b->setPiece(lastPressedX, lastPressedY, nullptr);
-						b->setPiece(pressedX, pressedY, selectedPiece);
-						b->setPiece(pressedX - 1, pressedY, b->getPiece('h', pressedY));
-						b->setPiece('h', pressedY, nullptr);				
-					}
-					else if (b->queenSideCastle(lastPressedX, lastPressedY, pressedX, pressedY)) {
-						b->setPiece(lastPressedX, lastPressedY, nullptr);
-						b->setPiece(pressedX, pressedY, selectedPiece);
-						b->setPiece(pressedX + 1, pressedY, b->getPiece('a', pressedY));
-						b->setPiece('a', pressedY, nullptr);
-					}
-					else if (b->enPassant(lastPressedX, lastPressedY, pressedX, pressedY)) {
-						b->setPiece(lastPressedX, lastPressedY, nullptr);
-						b->setPiece(pressedX, pressedY, selectedPiece);
-						b->setPiece(pressedX, pressedY + pow(-1, selectedPiece->getIsWhite()), nullptr);
-					}
-					else {
-						b->setPiece(lastPressedX, lastPressedY, nullptr);
-						b->setPiece(pressedX, pressedY, selectedPiece);
-					}	
-
-					drawBoard(b);
-					whitesTurn = !whitesTurn;
-					this->updatePlySinceFirstMove();
-					this->checkAndOrMate();
-
-					selectedPiece = nullptr;				
-				}
-			}	
-		}
-	}
-
+	if (GetMouse(0).bPressed) 
+		ply();
 
 	/*else if (GetMouse(1).bPressed) {
 		char pressedX = convertToChessCoordinates(GetMouseY() / PIECE_SIZE, GetMouseX() / PIECE_SIZE).first;
@@ -113,6 +36,85 @@ bool Game::OnUserUpdate(float elapsedTime) {
 	
 	return true;
 }
+
+void Game::ply() {
+	char pressedX = convertToChessCoordinates(GetMouseY() / PIECE_SIZE, GetMouseX() / PIECE_SIZE).first;
+	int pressedY = convertToChessCoordinates(GetMouseY() / PIECE_SIZE, GetMouseX() / PIECE_SIZE).second;
+	int32_t xTileCoord = GetMouseX() - (GetMouseX() % PIECE_SIZE);
+	int32_t yTileCoord = GetMouseY() - (GetMouseY() % PIECE_SIZE);
+	if (!selectedPiece) { //selecting a piece
+		if (b->getPiece(pressedX, pressedY)) {
+			if (b->getPiece(pressedX, pressedY)->getIsWhite() == whitesTurn) {
+				DrawRect(xTileCoord, yTileCoord, PIECE_SIZE - 1, PIECE_SIZE - 1, olc::GREEN);
+				selectedPiece = b->getPiece(pressedX, pressedY);
+
+				lastPressedX = pressedX;
+				lastPressedY = pressedY;
+			}
+
+		}
+	}
+
+	else {
+		if (b->getPiece(pressedX, pressedY)) {
+			if (selectedPiece->getIsWhite() != b->getPiece(pressedX, pressedY)->getIsWhite()) {	//taking		 
+				if (b->validMove(lastPressedX, lastPressedY, pressedX, pressedY)) {
+					b->setPiece(lastPressedX, lastPressedY, nullptr);
+					b->setPiece(pressedX, pressedY, selectedPiece);
+
+					drawBoard(b);
+					whitesTurn = !whitesTurn;
+					updatePlySinceFirstMove();
+					checkAndOrMate();
+
+					selectedPiece = nullptr;
+				}
+			}
+			else { //selecting a different piece of the same color
+				selectedPiece = b->getPiece(pressedX, pressedY);
+				drawBoard(b);
+				DrawRect(xTileCoord, yTileCoord, PIECE_SIZE - 1, PIECE_SIZE - 1, olc::GREEN);
+
+				lastPressedX = pressedX;
+				lastPressedY = pressedY;
+			}
+		}
+		else { // moving
+			if (b->validMove(lastPressedX, lastPressedY, pressedX, pressedY)) {
+				if (b->kingSideCastle(lastPressedX, lastPressedY, pressedX, pressedY)) {
+					b->setPiece(lastPressedX, lastPressedY, nullptr);
+					b->setPiece(pressedX, pressedY, selectedPiece);
+					b->setPiece(pressedX - 1, pressedY, b->getPiece('h', pressedY));
+					b->setPiece('h', pressedY, nullptr);
+				}
+				else if (b->queenSideCastle(lastPressedX, lastPressedY, pressedX, pressedY)) {
+					b->setPiece(lastPressedX, lastPressedY, nullptr);
+					b->setPiece(pressedX, pressedY, selectedPiece);
+					b->setPiece(pressedX + 1, pressedY, b->getPiece('a', pressedY));
+					b->setPiece('a', pressedY, nullptr);
+				}
+				else if (b->enPassant(lastPressedX, lastPressedY, pressedX, pressedY)) {
+					b->setPiece(lastPressedX, lastPressedY, nullptr);
+					b->setPiece(pressedX, pressedY, selectedPiece);
+					b->setPiece(pressedX, pressedY + pow(-1, selectedPiece->getIsWhite()), nullptr);
+				}
+				else {
+					b->setPiece(lastPressedX, lastPressedY, nullptr);
+					b->setPiece(pressedX, pressedY, selectedPiece);
+				}
+
+				drawBoard(b);
+				whitesTurn = !whitesTurn;
+				updatePlySinceFirstMove();
+				checkAndOrMate();
+
+				selectedPiece = nullptr;
+			}
+		}
+	}
+}
+
+
 
 void Game::updatePlySinceFirstMove() {
 	if (!selectedPiece->getHasMoved()) {
@@ -129,9 +131,15 @@ void Game::checkAndOrMate() {
 		if (b->Mate(1)) cout << "Checkmate, black wins" << endl;
 		else cout << "White king is in check!" << endl;
 	}
+	else if (!b->isAttacked(b->findKing(1).first, b->findKing(1).second, 1) && b->Mate(1)) {
+		cout << "Stalemate from black" << endl;
+	}
 	if (b->isAttacked(b->findKing(0).first, b->findKing(0).second, 0)) {
 		if (b->Mate(0)) cout << "Checkmate, white wins" << endl;
 		else cout << "Black king is in check!" << endl;
+	}
+	else if (!b->isAttacked(b->findKing(0).first, b->findKing(0).second, 0) && b->Mate(0)) {
+		cout << "Stalemate from white" << endl;
 	}
 }
 

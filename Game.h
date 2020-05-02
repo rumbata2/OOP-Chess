@@ -23,6 +23,8 @@ public:
 	bool OnUserCreate() override;
 	bool OnUserUpdate(float elapsedtime);
 
+	void ply();
+
 	void updatePlySinceFirstMove();
 	void checkAndOrMate();
 
