@@ -50,6 +50,7 @@ void Game::ply() {
 
 				lastPressedX = pressedX;
 				lastPressedY = pressedY;
+				drawValidMoves(b, lastPressedX, lastPressedY);
 			}
 
 		}
@@ -77,6 +78,7 @@ void Game::ply() {
 
 				lastPressedX = pressedX;
 				lastPressedY = pressedY;
+				drawValidMoves(b, lastPressedX, lastPressedY);
 			}
 		}
 		else { // moving
@@ -194,6 +196,21 @@ olc::Sprite* Game::getPieceSprite(Piece* piece) {
 
 void Game::drawPiece(char x, int y, olc::Sprite* spr) {
 	DrawSprite(convertToMatrixCoordinates(x, y).second * 80, convertToMatrixCoordinates(x, y).first * 80, spr);
+}
+
+void Game::drawCircle(char x, int y) {
+	FillCircle(convertToMatrixCoordinates(x, y).second * PIECE_SIZE + 0.5*PIECE_SIZE, convertToMatrixCoordinates(x, y).first * PIECE_SIZE + 0.5*PIECE_SIZE, 10, olc::GREEN);
+}
+
+
+void Game::drawValidMoves(Board* board, char x, int y) {
+	for (int tarY = 1; tarY <= 8; tarY++) {
+		for (char tarX = 'a'; tarX <= 'h'; tarX++) {
+			if (board->validMove(x, y, tarX, tarY)) {
+				drawCircle(tarX, tarY);
+			}
+		}
+	}
 }
 
 void Game::drawBoard(Board* board) {

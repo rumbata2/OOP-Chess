@@ -1,5 +1,4 @@
-﻿  Game.cpp
-c:\users\user\source\repos\oop chess\game.h(4): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-c:\users\user\source\repos\oop chess\game.cpp(99): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-c:\users\user\source\repos\oop chess\game.cpp(193): warning C4715: 'Game::getPieceSprite': not all control paths return a value
+﻿  Board.cpp
+c:\users\user\source\repos\oop chess\board.cpp(106): warning C4101: 'steps': unreferenced local variable
+c:\users\user\source\repos\oop chess\board.cpp(73): warning C4715: 'Board::findKing': not all control paths return a value
   OOP Chess.vcxproj -> C:\Users\User\source\repos\OOP Chess\Debug\OOP Chess.exe

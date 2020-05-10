@@ -28,6 +28,7 @@ public:
 	bool pawnTakeRule(Piece* piece, char currX, int currY, char targetX, int targetY);
 	bool enPassant(char currX, int currY, char targetX, int targetY);
 	bool blockedPath(Piece* pieceToMove, char currX, int currY, char targetX, int targetY);
+
 	int isAttacked(char X, int Y, bool isWhite);
 	bool checkAfterPly(char currX, int currY, char targetX, int targetY);
 	bool Mate(bool white);

@@ -31,6 +31,8 @@ public:
 	olc::Sprite* getPieceSprite(Piece* piece);
 	void drawSquares();
 	void drawPiece(char x, int y, olc::Sprite* spr);
+	void drawCircle(char x, int y);
+	void drawValidMoves(Board* board, char X, int Y);
 	void drawBoard(Board* board);
 };
 

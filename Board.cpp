@@ -219,7 +219,8 @@ bool Board::kingSideCastle(char currX, int currY, char targetX, int targetY) {
 	int row = pieceToMove->getIsWhite() ? 1 : 8;
 	return (currX == 'e' && currY == row && targetX == 'e' + 2 && targetY == row &&
 		pieceToMove->name() == "King" && !this->getPiece('f', row) && !this->getPiece('g', row) && this->getPiece('h', row) &&
-		!pieceToMove->getHasMoved() && !this->getPiece('h', row)->getHasMoved());
+		!pieceToMove->getHasMoved() && !this->getPiece('h', row)->getHasMoved() && 
+		!isAttacked('e', row, pieceToMove->getIsWhite()) && !isAttacked('f', row, pieceToMove->getIsWhite()));
 		
 }
 
@@ -228,7 +229,8 @@ bool Board::queenSideCastle(char currX, int currY, char targetX, int targetY) {
 	int row = pieceToMove->getIsWhite() ? 1 : 8;
 	return (currX == 'e' && currY == row && targetX == 'e' - 2 && targetY == row &&
 		pieceToMove->name() == "King" && this->getPiece('a', row) && !this->getPiece('b', row) && !this->getPiece('c', row) && !this->getPiece('d', row) &&
-		!pieceToMove->getHasMoved() && !this->getPiece('a', row)->getHasMoved());
+		!pieceToMove->getHasMoved() && !this->getPiece('a', row)->getHasMoved() &&
+		!isAttacked('e', row, pieceToMove->getIsWhite()) && !isAttacked('d', row, pieceToMove->getIsWhite()));
 }
 
 bool Board::checkAfterPly(char currX, int currY, char targetX, int targetY) {
@@ -286,4 +288,4 @@ bool Board::hasValidMoves(char currX, int currY) {
 		}
 	}
 	return result;
-}
+}	
